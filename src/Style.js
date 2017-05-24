@@ -35,6 +35,9 @@ const Style = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  inputButtonSelected: {
+    backgroundColor: 'rgba(10, 10, 10, 0.03)',
+  },
   inputButtonText: {
     fontSize: 25,
     color: 'white',

@@ -21,6 +21,8 @@ export default class App extends Component {
   state = {
     inputValue: 0,
     historyValue: '',
+    previousInputValue: 0,
+    selectedSymbol: null,
   }
 
   render() {
@@ -60,6 +62,7 @@ export default class App extends Component {
         <InputButton
           value={input}
           key={idx1 - idx2}
+          selected={this.state.selectedSymbol === input}
           onPress={this._onInputButtonPressed(input)}
         />
       ));
@@ -71,6 +74,49 @@ export default class App extends Component {
   }
 
   _onInputButtonPressed = (input) => () => {
-    alert(input);
+    switch (typeof input) {
+      case 'number':
+        return this._handleNumberInput(input)
+      case 'string':
+        return this._handleStringInput(input)
+    }
+  }
+
+  _handleNumberInput = (num) => {
+    this.setState({
+      inputValue: this.state.inputValue*10 + num,
+    });
+  }
+
+  _handleStringInput = (str) => {
+    switch (str) {
+      case '/':
+      case '*':
+      case '-':
+      case '+':
+        this.setState({
+          selectedSymbol: str,
+          previousInputValue: this.state.inputValue,
+          inputValue: 0,
+        });
+        break;
+      case '=':
+        let symbol = this.state.selectedSymbol,
+            inputValue = this.state.inputValue,
+            previousInputValue = this.state.previousInputValue;
+        if (!symbol) return;
+        this.setState({
+          previousInputValue: 0,
+          inputValue: eval(previousInputValue + symbol + inputValue),
+          selectedSymbol: null,
+        });
+        break;
+      case 'C':
+        this.setState({
+          previousInputValue: 0,
+          inputValue: 0,
+          selectedSymbol: null,
+        });
+    }
   }
 }

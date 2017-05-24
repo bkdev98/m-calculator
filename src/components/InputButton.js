@@ -7,7 +7,7 @@ class InputButton extends Component {
   render() {
     return (
       <TouchableOpacity
-        style={Style.inputButton}
+        style={[Style.inputButton, this.props.selected ? Style.inputButtonSelected : null]}
         underlayColor="#E91E63"
         onPress={this.props.onPress}
       >
