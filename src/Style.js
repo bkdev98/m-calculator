@@ -19,6 +19,7 @@ const Style = StyleSheet.create({
     color: 'white',
     fontSize: 55,
     textAlign: 'right',
+    lineHeight: 48,
     padding: 20,
   },
   displayHistoryText: {
@@ -36,7 +37,7 @@ const Style = StyleSheet.create({
     justifyContent: 'center',
   },
   inputButtonSelected: {
-    backgroundColor: 'rgba(10, 10, 10, 0.03)',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
   },
   inputButtonText: {
     fontSize: 25,

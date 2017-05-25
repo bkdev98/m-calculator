@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { Text, TouchableHighlight } from 'react-native';
 
 import Style from '../Style';
 
 class InputButton extends Component {
   render() {
     return (
-      <TouchableOpacity
+      <TouchableHighlight
         style={[Style.inputButton, this.props.selected ? Style.inputButtonSelected : null]}
-        underlayColor="#E91E63"
+        underlayColor="rgba(255, 255, 255, 0.05)"
         onPress={this.props.onPress}
       >
         <Text style={Style.inputButtonText}>{this.props.value}</Text>
-      </TouchableOpacity>
+      </TouchableHighlight>
     );
   }
 }
