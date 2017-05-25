@@ -5,6 +5,7 @@ import { Text, View, Dimensions } from 'react-native';
 import Style from './Style';
 
 import InputButton from './components/InputButton';
+import Modal from './components/Modal';
 
 const { LinearGradient } = Components;
 const { height } = Dimensions.get('window');
@@ -21,6 +22,18 @@ export default class App extends Component {
   state = {
     inputValue: '0',
     expressionString: '',
+    errorModalOpen: false,
+    error: '',
+  }
+
+  componentDidUpdate () {
+    if (this.state.errorModalOpen) {
+      setTimeout(() => {
+        this.setState({
+          errorModalOpen: false,
+        });
+      }, 1000);
+    }
   }
 
   render() {
@@ -30,15 +43,11 @@ export default class App extends Component {
         end={[0.5, 1.0]}
         colors={['#fc00ff', '#00dbde']}
         style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          top: 0,
           height,
         }}
       >
-        <View style={Style.displayHistoryContainer}>
-          <Text style={Style.displayHistoryText}>{this.state.expressionString}</Text>
+        <View style={Style.displayExpressionContainer}>
+          <Text style={Style.displayExpressionText}>{this.state.expressionString}</Text>
         </View>
         <View style={Style.displayCurrentContainer}>
           <Text style={Style.displayCurrentText}>{this.state.inputValue}</Text>
@@ -46,6 +55,17 @@ export default class App extends Component {
         <View style={Style.inputContainer}>
           {this._renderInputButtons()}
         </View>
+        <Modal
+          open={this.state.errorModalOpen}
+          offset={500}
+          modalStyle={Style.errorModal}
+          overlayBackground={'rgba(255, 255, 255, 0)'}
+          modalDidClose={() => this.setState({ errorModalOpen: false })}
+        >
+          <View style={Style.errorContainer}>
+            <Text style={Style.errorText}>Somethings went wrong!</Text>
+          </View>
+        </Modal>
       </LinearGradient>
     );
   }
@@ -109,15 +129,29 @@ export default class App extends Component {
           })
         }
         break;
+      case '.':
+          if (inputValue !== '0') this.setState({
+            inputValue: inputValue + str,
+          });
+          break;
       case '=':
         if (!inputValue) return;
-        this.setState({
-          inputValue: eval(inputValue).toString(),
-        });
+        try {
+          const value = eval(inputValue).toString();
+          this.setState({
+            expressionString: inputValue,
+            inputValue: value,
+          });
+        } catch (e) {
+          if (e instanceof SyntaxError) {
+            this.setState({ errorModalOpen: true, });
+          }
+        }
         break;
       case 'C':
         this.setState({
           inputValue: '0',
+          expressionString: '',
         });
         break;
       case 'DEL':

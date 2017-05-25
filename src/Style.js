@@ -4,7 +4,7 @@ const Style = StyleSheet.create({
   container: {
     flex: 1,
   },
-  displayHistoryContainer: {
+  displayExpressionContainer: {
     flex: 1.5,
     justifyContent: 'center',
     alignContent: 'flex-end',
@@ -22,7 +22,7 @@ const Style = StyleSheet.create({
     lineHeight: 48,
     padding: 20,
   },
-  displayHistoryText: {
+  displayExpressionText: {
     color: 'white',
     fontSize: 30,
     textAlign: 'right',
@@ -47,6 +47,18 @@ const Style = StyleSheet.create({
   inputRow: {
     flex: 1,
     flexDirection: 'row',
+  },
+  errorModal: {
+    alignItems: 'center',
+    top: 10,
+    left: 0,
+    right: 0,
+    position: 'absolute',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  errorText: {
+    color: '#fff',
+    fontSize: 25,
   },
 });
 
