@@ -23,6 +23,8 @@ export default class App extends Component {
     inputValue: '0',
     expressionString: '',
     errorModalOpen: false,
+    openBrackets: 0,
+    closeBrackets: 0,
     error: '',
   }
 
@@ -108,7 +110,7 @@ export default class App extends Component {
   }
 
   _handleStringInput = (str) => {
-    const { inputValue } = this.state;
+    const { inputValue, closeBrackets, openBrackets } = this.state;
 
     switch (str) {
       case '/':
@@ -133,10 +135,12 @@ export default class App extends Component {
         if (inputValue === '0') {
           this.setState({
             inputValue: '(',
+            openBrackets: openBrackets + 1,
           });
-        } else if (!isNaN(inputValue[inputValue.length - 1])) {
+        } else if (!isNaN(inputValue[inputValue.length - 1]) && closeBrackets < openBrackets) {
           this.setState({
             inputValue: inputValue + ')',
+            closeBrackets: closeBrackets + 1,
           });
         } else if (isNaN(inputValue[inputValue.length - 1])) {
           switch (inputValue[inputValue.length - 1]) {
@@ -144,9 +148,18 @@ export default class App extends Component {
             case '-':
             case '*':
             case '/':
+            case '(':
               this.setState({
                 inputValue: inputValue + '(',
+                openBrackets: openBrackets + 1,
               });
+              break;
+            case ')':
+              if (closeBrackets < openBrackets) this.setState({
+                inputValue: inputValue + ')',
+                closeBrackets: closeBrackets + 1,
+              });
+              break;
           }
         };
         break;
@@ -162,6 +175,8 @@ export default class App extends Component {
           this.setState({
             expressionString: inputValue,
             inputValue: value,
+            openBrackets: 0,
+            closeBrackets: 0,
           });
         } catch (e) {
           if (e instanceof SyntaxError) {
@@ -181,9 +196,24 @@ export default class App extends Component {
             inputValue: '0',
           });
         } else {
-          this.setState({
-            inputValue: inputValue.slice(0, -1),
-          });
+          switch (inputValue[inputValue.length - 1]) {
+            case '(':
+              this.setState({
+                openBrackets: openBrackets - 1,
+                inputValue: inputValue.slice(0, -1),
+              });
+              break;
+            case ')':
+              this.setState({
+                closeBrackets: closeBrackets - 1,
+                inputValue: inputValue.slice(0, -1),
+              });
+              break;
+            default:
+              this.setState({
+                inputValue: inputValue.slice(0, -1),
+              });
+          }
         }
         break;
     }
