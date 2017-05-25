@@ -10,7 +10,7 @@ const { LinearGradient } = Components;
 const { height } = Dimensions.get('window');
 
 const inputButtons = [
-  ['C', 'MR', '%', '$'],
+  ['C', 'MR', '%', 'DEL'],
   [1, 2, 3, '/'],
   [4, 5, 6, '*'],
   [7, 8, 9, '-'],
@@ -19,9 +19,9 @@ const inputButtons = [
 
 export default class App extends Component {
   state = {
-    inputValue: 0,
+    inputValue: '0',
     historyValue: '',
-    previousInputValue: 0,
+    previousInputValue: '0',
     selectedSymbol: null,
   }
 
@@ -83,12 +83,16 @@ export default class App extends Component {
   }
 
   _handleNumberInput = (num) => {
+    const { inputValue } = this.state;
+    const value = (inputValue === '0') ? num.toString() : inputValue + num.toString();
     this.setState({
-      inputValue: this.state.inputValue*10 + num,
+      inputValue: value,
     });
   }
 
   _handleStringInput = (str) => {
+    const { inputValue, previousInputValue } = this.state;
+
     switch (str) {
       case '/':
       case '*':
@@ -96,27 +100,37 @@ export default class App extends Component {
       case '+':
         this.setState({
           selectedSymbol: str,
-          previousInputValue: this.state.inputValue,
-          inputValue: 0,
+          previousInputValue: inputValue,
+          inputValue: '0',
         });
         break;
       case '=':
-        let symbol = this.state.selectedSymbol,
-            inputValue = this.state.inputValue,
-            previousInputValue = this.state.previousInputValue;
+        let symbol = this.state.selectedSymbol;
         if (!symbol) return;
         this.setState({
-          previousInputValue: 0,
-          inputValue: eval(previousInputValue + symbol + inputValue),
+          previousInputValue: '0',
+          inputValue: eval(previousInputValue + symbol + inputValue).toString(),
           selectedSymbol: null,
         });
         break;
       case 'C':
         this.setState({
-          previousInputValue: 0,
-          inputValue: 0,
+          previousInputValue: '0',
+          inputValue: '0',
           selectedSymbol: null,
         });
+        break;
+      case 'DEL':
+        if (inputValue.length <= 1) {
+          this.setState({
+            inputValue: '0',
+          });
+        } else {
+          this.setState({
+            inputValue: inputValue.slice(0, -1),
+          });
+        }
+        break;
     }
   }
 }
