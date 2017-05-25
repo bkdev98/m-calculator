@@ -11,7 +11,7 @@ const { LinearGradient } = Components;
 const { height } = Dimensions.get('window');
 
 const inputButtons = [
-  ['C', '(', ')', 'DEL'],
+  ['C', 'M', '( )', 'DEL'],
   [1, 2, 3, '/'],
   [4, 5, 6, '*'],
   [7, 8, 9, '-'],
@@ -114,13 +114,11 @@ export default class App extends Component {
       case '/':
       case '*':
       case '+':
-      case ')':
         if (inputValue !== '0') this.setState({
           inputValue: inputValue + str,
         });
         break;
       case '-':
-      case '(':
         if (inputValue === '0') {
           this.setState({
             inputValue: str,
@@ -130,6 +128,27 @@ export default class App extends Component {
             inputValue: inputValue + str,
           })
         }
+        break;
+      case '( )':
+        if (inputValue === '0') {
+          this.setState({
+            inputValue: '(',
+          });
+        } else if (!isNaN(inputValue[inputValue.length - 1])) {
+          this.setState({
+            inputValue: inputValue + ')',
+          });
+        } else if (isNaN(inputValue[inputValue.length - 1])) {
+          switch (inputValue[inputValue.length - 1]) {
+            case '+':
+            case '-':
+            case '*':
+            case '/':
+              this.setState({
+                inputValue: inputValue + '(',
+              });
+          }
+        };
         break;
       case '.':
           if (inputValue !== '0') this.setState({
