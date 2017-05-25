@@ -7,7 +7,7 @@ class InputButton extends Component {
   render() {
     return (
       <TouchableHighlight
-        style={[Style.inputButton, this.props.selected ? Style.inputButtonSelected : null]}
+        style={Style.inputButton}
         underlayColor="rgba(255, 255, 255, 0.05)"
         onPress={this.props.onPress}
       >

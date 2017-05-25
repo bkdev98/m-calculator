@@ -20,9 +20,7 @@ const inputButtons = [
 export default class App extends Component {
   state = {
     inputValue: '0',
-    historyValue: '',
-    previousInputValue: '0',
-    selectedSymbol: null,
+    expressionString: '',
   }
 
   render() {
@@ -40,7 +38,7 @@ export default class App extends Component {
         }}
       >
         <View style={Style.displayHistoryContainer}>
-          <Text style={Style.displayHistoryText}>{this.state.historyValue}</Text>
+          <Text style={Style.displayHistoryText}>{this.state.expressionString}</Text>
         </View>
         <View style={Style.displayCurrentContainer}>
           <Text style={Style.displayCurrentText}>{this.state.inputValue}</Text>
@@ -62,7 +60,6 @@ export default class App extends Component {
         <InputButton
           value={input}
           key={idx1 - idx2}
-          selected={this.state.selectedSymbol === input}
           onPress={this._onInputButtonPressed(input)}
         />
       ));
@@ -91,33 +88,26 @@ export default class App extends Component {
   }
 
   _handleStringInput = (str) => {
-    const { inputValue, previousInputValue } = this.state;
+    const { inputValue } = this.state;
 
     switch (str) {
       case '/':
       case '*':
       case '-':
       case '+':
-        this.setState({
-          selectedSymbol: str,
-          previousInputValue: inputValue,
-          inputValue: '0',
+        if (inputValue !== '0') this.setState({
+          inputValue: inputValue + str,
         });
         break;
       case '=':
-        let symbol = this.state.selectedSymbol;
-        if (!symbol) return;
+        if (!inputValue) return;
         this.setState({
-          previousInputValue: '0',
-          inputValue: eval(previousInputValue + symbol + inputValue).toString(),
-          selectedSymbol: null,
+          inputValue: eval(inputValue).toString(),
         });
         break;
       case 'C':
         this.setState({
-          previousInputValue: '0',
           inputValue: '0',
-          selectedSymbol: null,
         });
         break;
       case 'DEL':
