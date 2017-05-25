@@ -93,11 +93,21 @@ export default class App extends Component {
     switch (str) {
       case '/':
       case '*':
-      case '-':
       case '+':
         if (inputValue !== '0') this.setState({
           inputValue: inputValue + str,
         });
+        break;
+      case '-':
+        if (inputValue === '0') {
+          this.setState({
+            inputValue: str,
+          })
+        } else {
+          this.setState({
+            inputValue: inputValue + str,
+          })
+        }
         break;
       case '=':
         if (!inputValue) return;
